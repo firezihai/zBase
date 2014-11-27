@@ -8,28 +8,13 @@
  * @license		     http://www.apache.org/licenses/LICENSE-2.0
  * @link	            	www.zihaidetiandi.com/palm/
  */
-
-/**
- * 应用程序目录名
- */
-define('APP_DIR',  dirname(dirname(__FILE__)));
 /**
  * palm核心类库目录名
  */
- define('BASE_DIR',  dirname(__FILE__));
- /**
-  * 配置文件目录名
-  */
- if(!defined('CONF_DIRS')){
-     define('CONF_DIR',  'config');
- }
+ defined('ZBASE_DIR') or define('ZBASE_DIR',  dirname(__FILE__));
  /**
   * 数据目录名
   */
- if(!defined('DATA_DIR')){
-     define('DATA_DIR',  'data');
- }
-
  /**
   * 目录分格符
   */
@@ -69,17 +54,15 @@ define('DS', DIRECTORY_SEPARATOR);
       * 初始化应用程序。
       * 
       */
-     public function boot(){
-         include BASE_DIR.DS.'core'.DS.'app.php';
-         app::uses('base.core');
+     public function boot($config){
+         include ZBASE_DIR.DS.'core'.DS.'app.php';
+		kernel::single('app')->init($config);
          if(!self::registerAutoloader()){
              function __autoload($className){
                  app::autoload($className);
              }
          }
-         $data = array('app'=>array('core'=>array('app.php','configure.php')));
-       $data =  hash::insert($data,'app.other',array('hash.php','component.php'));
-        print_r($data);
+         
      }
      /**
       * 单例实法，用来实例化一个类，并返回这个类的对象。
@@ -117,6 +100,5 @@ define('DS', DIRECTORY_SEPARATOR);
          }
          return false;
      }
-
  }
 ?>

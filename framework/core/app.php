@@ -35,10 +35,31 @@ class app{
      * @var array
      */
     private static $_includePath;
-    private static $_packagePathMap = array();
+    public static $_packagePathMap = array();
     private static $_classMap = array();
-    public function bulid($package=array()){
-        //$systemPackage =  
+    private $appPath;
+    public  function init($config){
+    	self::setPackagePath('system', ZBASE_DIR);
+    	$this->systemPackage();
+    	if (isset($config['appPath'])){
+    		$this->setAppPath($config['appPath']);
+    	}else{
+    		$this->setAppPath('app');
+    	}
+    	$this->setPackagePath('app', $this->getAppPath());
+    	$this->configure($config);
+    }
+    public function __get($name){
+    	$method = 'get'.$name;
+    	if (method_exists($this,$method)){
+    		return $this->$method();
+    	}
+    }
+    public function __set($name,$value){
+    	$method = 'set'.$name;
+    	if (method_exists($this,$method)){
+    		return $this->$method($value);
+    	}
     }
     
     public static function import($package,$forceInclude = false){
@@ -65,14 +86,21 @@ class app{
     public static function getPackagePath($package){
         if(isset(self::$_packagePathMap[$package])){
             return self::$_packagePathMap[$package];
-        }else{
-           if (!isset(self::$package[$package])){
-               return false;
-           }
-          return  self::$_packagePathMap[$package] = APP_DIR.DS.str_replace('.', DS, $package);
+        }elseif (($pos = strpos($package, '.')) !== false){
+        	$base= substr($package, 0,$pos);
+        	if (self::$_packagePathMap[$base]){
+         		  return  self::$_packagePathMap[$package] =  rtrim(self::$_packagePathMap[$base].DS.str_replace('.', DS, substr($package,$pos+1)),'*'.DS);
+        	}
         }
+        return false;
     }
-    
+    public static function setPackagePath($package,$path){
+    	if (empty($path)){
+    		unset(self::$_packagePathMap[$package]);
+    	}else {
+    		self::$_packagePathMap[$package] = $path;
+    	}
+    }
     /**
      * 类加载器
      */
@@ -100,6 +128,40 @@ class app{
     }
      public static function uses($package){
          self::$package[$package] = $package;
+     }
+     
+     /**
+      * 应用配置
+      * @param array $config
+      */
+     private function configure($config){
+     	if (is_array($config)){
+     		foreach ($config as $key=>$value){
+     			$this->$key=$value;
+     		}
+     	}
+     }
+     private   function systemPackage(){
+     	$systemPackage = array(
+     			'system.core'
+     	);
+     	foreach ($systemPackage as $package){
+     		app::import($package);
+     	}
+     }
+     public function setImport($value){
+     	foreach ($value as $key =>$value){
+     		app::import($value);
+     	}
+     }     
+     public function getAppPath(){
+     	return $this->appPath;
+     }
+     
+     public function setAppPath($path = null){
+     	if (($this->appPath = realpath($path)) === false || !is_dir($path) ){
+     		exit("Application base path $path is not a valid directory");
+     	}
      }
 }
 ?>
