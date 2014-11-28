@@ -4,16 +4,16 @@
  *
  * An open source application development framework for PHP 5.1.6 or newer
  * @author		    子海(zihaidetiandi@sina.com)
- * @copyright	    Copyright (c) 2014 - 2015, www.zihaidetiandi.com
- * @license		     http://www.apache.org/licenses/LICENSE-2.0
- * @link	            	www.zihaidetiandi.com/palm/
+ * @copyright	 Copyright (c) 2014 - 2015, www.zihaidetiandi.com
+ * @license		 http://www.apache.org/licenses/LICENSE-2.0
+ * @link	     www.zihaidetiandi.com/zBase/
  */
 /**
  * 
- * @author 子海(zihaidetiandi@sina.com)
- * @package system.core
- *  @since		        Version 1.0
- * @version        $Id configure.php 2014-11-21 00:52:00 $
+ * @author       子海(zihaidetiandi@sina.com)
+ * @package      system.core
+ * @since		 Version 1.0
+ * @version      $Id configure.php 2014-11-26 09:52:00 $
  * @filesource
  */
 class configure{
@@ -63,6 +63,9 @@ class configure{
         return hash::get(self::$conf, $var);
     }
     
+    public function merge($data,$merge){
+    	
+    }
    
  
 }

@@ -9,60 +9,42 @@
  * @link	            	www.zihaidetiandi.com/palm/
  */
 /**
- * palm核心类库目录名
+ * zBase核心类库目录名
  */
  defined('ZBASE_DIR') or define('ZBASE_DIR',  dirname(__FILE__));
- /**
-  * 数据目录名
-  */
  /**
   * 目录分格符
   */
 define('DS', DIRECTORY_SEPARATOR);
 /**
  *助手类，它服务于整个框架
- * @package		system.core
- * @author		子海(zihaidetiandi@sina.com)
- * @since		     version 1.0
+ * @package		 system.core
+ * @author		 子海(zihaidetiandi@sina.com)
+ * @since		 version 1.0
  * @filesource
  */
-
  class kernel{
-    /**
-     *  框架自动加载类的类图数组。
-     *  这个数组的键是一个类名，数组的值则是对应的类文件路径
-     * @var array
-     */
-     public static $_classMap = array();
-     
      /**
       * kernel单例方法的类实列数组。
       * 键是一个类名或者一个序列化字符串，数组的值是一个类的实例化对象
       * @var array 
       */
      public static $_singleInstanceMap = array();
-     
-     /**
-      * 储存导入类文件。
-      * 这个数组的键是一个类名，数组的值则是对应的类文件路径
-      * @var array
-      */
-     private static $_import = array();
-     
-     
-     /**
-      * 初始化应用程序。
-      * 
-      */
-     public function boot($config){
-         include ZBASE_DIR.DS.'core'.DS.'app.php';
+	/**
+	 * 引导应用程序方法
+	 *
+	 * @param array $config  应用程序配置数组  
+	 */
+     public static function boot($config){
+        include ZBASE_DIR.DS.'core'.DS.'app.php';
+        self::systemPackage();
 		kernel::single('app')->init($config);
-         if(!self::registerAutoloader()){
-             function __autoload($className){
-                 app::autoload($className);
-             }
-         }
-         
+        if(!self::registerAutoloader()){
+            function __autoload($className){
+                app::autoload($className);
+            }
+        }
+       	configure::write('app',array('db'=>array('host'=>'localhost','user'=>'root','password'=>'','dbname'=>'test')));
      }
      /**
       * 单例实法，用来实例化一个类，并返回这个类的对象。
@@ -99,6 +81,17 @@ define('DS', DIRECTORY_SEPARATOR);
              return spl_autoload_register($load);
          }
          return false;
+     }
+     /**
+      * 导入框架系统类包
+      * @return void
+      */
+     private   function systemPackage(){
+     	$systemPackage = array('system.core');
+     	app::uses('system', ZBASE_DIR);
+     	foreach ($systemPackage as $package){
+     		app::uses($package);
+     	}
      }
  }
 ?>

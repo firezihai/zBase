@@ -4,17 +4,17 @@
  *
  * An open source application development framework for PHP 5.1.6 or newer
  * @author		    子海(zihaidetiandi@sina.com)
- * @copyright	    Copyright (c) 2014 - 2015, www.zihaidetiandi.com
- * @license		     http://www.apache.org/licenses/LICENSE-2.0
- * @link	            	www.zihaidetiandi.com/palm/
+ * @copyright	  Copyright (c) 2014 - 2015, www.zihaidetiandi.com
+ * @license		  http://www.apache.org/licenses/LICENSE-2.0
+ * @link	      www.zihaidetiandi.com/zBase/
  */
 /**
  *处理和获取数组中数据的方法集合
  *hash类使用'.'标记构造的键操作链设置和提取数组的值，这种方法更加方便和直观了解当前操作的数组结构。
- * @author 子海(zihaidetiandi@sina.com)
- * @package base.core
- *  @since		        Version 1.0
- * @version        $Id hash.php 2014-11-21 00:52:00 $
+ * @author       子海(zihaidetiandi@sina.com)
+ * @package      system.core
+ *  @since		 Version 1.0
+ * @version      $Id hash.php 2014-11-28 8:52:00 $
  * @filesource
  */
 class hash{
