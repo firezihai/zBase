@@ -44,7 +44,13 @@ define('DS', DIRECTORY_SEPARATOR);
                 app::autoload($className);
             }
         }
-       	configure::write('app',array('db'=>array('host'=>'localhost','user'=>'root','password'=>'','dbname'=>'test')));
+        echo 'script_name:'.request::scriptName().'<br/>';
+     	echo 'path_info:'.request::pathInfo().'<br/>';
+     	echo 'request_uri:'.request::requestUri().'<br/>';
+     	echo 'host:'.request::host().'<br/>';
+     	echo 'url:'.request::url().'<br/>';
+     	echo 'base_url：'.request::scriptFilName().'<br/>';
+        
      }
      /**
       * 单例实法，用来实例化一个类，并返回这个类的对象。
@@ -86,7 +92,7 @@ define('DS', DIRECTORY_SEPARATOR);
       * 导入框架系统类包
       * @return void
       */
-     private   function systemPackage(){
+     private static  function systemPackage(){
      	$systemPackage = array('system.core');
      	app::uses('system', ZBASE_DIR);
      	foreach ($systemPackage as $package){
