@@ -81,5 +81,39 @@ class hash{
            }
        }
    }
+   /**
+    * 合并数组
+    * array_merge和array_merge_recursive方法结合。
+    * 如果$data和$merge存在相同的键名， $merge中的值不会覆盖$data的值，而是附加到$data数组的后面。
+    * @param array $data
+    * @param string|array $merge
+    * @return array 返回合并后的数组
+    */
+   public  static function merge(array $data,$merge){
+		$args = array_slice(func_get_args(), 1);
+		$return = $data;
+		foreach ($args as &$curArg) {
+			$stack[] = array((array)$curArg, &$return);
+			unset($curArg);
+		}
+		
+		while (!empty($stack)){
+			foreach ($stack as $key =>&$array){
+				foreach ($array[0] as $k=>&$v){
+					if(!empty($array[1][$k]) && (array)$array[1][$k] === $array[1][$k] && (array)$v === $v){
+						$stack[] = array(&$v,&$array[1][$k]);
+					}elseif ((int)$k === $k && isset($array[1][$k])){
+						$array[1][] = $v;
+					}else{
+						$array[1][$k] = $v;
+					}
+				}
+				unset($stack[$key]);
+			}
+			unset($array);
+		}
+		
+		return $return;
+   }
 }
 ?>
