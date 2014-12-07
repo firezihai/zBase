@@ -31,7 +31,7 @@
  		$pathInfo = '';
  		if(isset($_SERVER['PATH_INFO'])){
  			$pathInfo = $_SERVER['PATH_INFO'];
- 		}elseif (isset($_SERVER['ORIG_PATH_INFO'])){
+ 		}elseif (isset($_SERVER['ORIG_PATH_INFO'])){ //IIS CGI
  			$pathInfo = $_SERVER['ORIG_PATH_INFO'];
  			$scriptName = self::scriptName();
  			if(substr($scriptName, -1,1) != '/'){

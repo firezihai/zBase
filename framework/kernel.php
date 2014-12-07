@@ -50,6 +50,7 @@ define('DS', DIRECTORY_SEPARATOR);
      	echo 'host:'.request::host().'<br/>';
      	echo 'url:'.request::url().'<br/>';
      	echo 'base_url：'.request::scriptFilName().'<br/>';
+	
         
      }
      /**
