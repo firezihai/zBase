@@ -23,7 +23,7 @@ class db{
 	 * 数据库查询语句结构
 	 * @var string
 	 */
-	protected $sql = 'SELECT %DISTINCT% %FIELD% FROM %TABLE% %JOIN% %WHERE% %GROUP% %HAVING% %ORDER% %LIMIT% %UNION%%COMMENT%';
+	protected $sql = 'SELECT %DISTINCT% %FIELD% FROM %TABLE% %JOIN% %WHERE% %GROUP% %HAVING% %ORDER% %LIMIT% %UNION% %COMMENT%';
 	private function __construct(){}
 	/**
 	 * 单例方法
@@ -55,14 +55,30 @@ class db{
 		}
 	}
 	public function select($options){
-		$sql = $this->bulidSql($options);
+		$sql = $this->bulidSql($this->sql,$options);
 		$this->lasSql = $sql;
-		$result = $this->query($sql);
-		return $result;
+		echo $this->lasSql;
+		//$result = $this->query($sql);
+		//return $result;
 	}
 	
-	protected  function bulidSql(){
-		
+	protected  function bulidSql($sql,$options){
+		$sql = str_replace(
+				array('%DISTINCT%','%FIELD%','%TABLE%','%JOIN%','%WHERE%','%GROUP%','%HAVING%','%ORDER%','%LIMIT%','%UNION%','%COMMENT%'),
+				array(	$this->parseDistinct($options['distinct']),
+							$this->parseField($options['field']),
+						   $this->parseTable($options['table']),
+						   $this->parseJoin($options['join']),
+						   $this->parseWhere($options['where']),
+						   $this->parseGroup($options['group']),
+						   $this->parseHaving($options['having']),
+						   $this->parseOrder($options['order']),
+						   $this->parseLimit($options['limit']),
+						   $this->parseUnion($options['unin']),
+						  $this->parseComment($options['comment'])
+				),
+				$sql);
+		return $sql;
 	}
 	protected function parseField($fields){
 		if(is_string($fields)&& strpos($fields, ',')){
@@ -85,6 +101,22 @@ class db{
 		}
 		return $fieldStr ;
 	}
+	protected function parseTable($tables){
+		if (is_array($tables)){
+			$array = array();
+			foreach ($tables as $table=>$alias){
+				if (!is_numeric($table)){
+					$array[] = $table.' AS '.$alias;
+				}else{
+					$array[] = $alias;
+				}
+			}
+			$tables = $array;
+		}else{
+			$tables = explode(',', $tables);
+		}
+		return implode(',', $tables);
+	}
 	protected function parseKey(&$key){
 		return $key;
 	}
@@ -99,22 +131,64 @@ class db{
 		return $value;
 	}
 	protected function parseWhere($where){
+		$whereSql = '';
 		if (is_string($where)){
 			$whereSql = $where;
 		}elseif (is_array($where)){
-			foreach ($where as $operator=>$value){
-				if (is_array($value)){
-					foreach ($value as $key=>$v){
-						if (strpos($key,'@') !== false){
-						$temp = explode('@', $key);
-						}
+			$operator = 'AND ';
+			foreach ($where as $key=>$v){
+				
+				if (!is_numeric($key)&& is_array($v) && in_array(strtoupper($key), array('AND','OR','XOR'))){
+					$operator = strtoupper($key);
+					$whereSql .='(';
+					foreach ($v as $field=>$value){
+						$whereSql .= $this->parseWhereItem($key, $v);
+						$whereSql .=')'.$operator;
 					}
+					$whereSql .= substr($whereSql,0,-strlen($operator));
+				}else{
+					
+					$whereSql .= $this->parseWhereItem($key, $v);
+					$whereSql .=' AND ';
 				}
 			}
+			$whereSql = substr($whereSql,0,-strlen($operator));
 		}
+
+		return !empty($whereSql) ? ' WHERE '.$whereSql : '';
+	}
+	protected function parseWhereItem($key,$v){
+		$whereSql = '';
+		if (strpos($key,'@') !== false){
+			$temp = explode('@', $key);
+			if ($temp[1] =='~'){
+				$whereSql .= $temp[0].' LIKE %'.$this->parseValue($v).'%';
+			}elseif ($temp[1] == '~!'){
+				$whereSql .= $temp[0].' LIKE '.$this->parseValue($v).'%';
+			}elseif ($temp[1] == '!~'){
+				$whereSql .= $temp[0].' LIKE %'.$this->parseValue($v);
+			}elseif (in_array($temp[1], array('<>','>','<','=','>=','<='))){
+				$logic = $temp[1];
+				$whereSql .= $temp[0].$logic.$this->parseValue($v);
+			}
+		}
+		return $whereSql;
+	}
+	protected function parseJoin($join){
+		$joinStr = '';
+		if (!empty($join)){
+			$joinStr = ' '.implode(' ', $join).' ';
+		}
+		return $joinStr;
+	}
+	protected function parseDistinct($distinct){
+		return !empty($distinct) ? 'DISTINCT '.$distinct : '';
 	}
 	protected function parseGroup($group){
 		return !empty($group) ? 'GROUP BY '.$group : '';
+	}
+	protected function parseHaving($having){
+		return !empty($having)?'HAVING '.$having : '';
 	}
 	protected  function parseOrder($order){
 		return !empty($order) ? 'ORDER BY  '.$order : '';
@@ -124,6 +198,12 @@ class db{
 	}
 	protected function parseUnion($union){
 		return !empty($union) ? 'UNION '.$union : '';
+	}
+	protected function parseComment($comment){
+		return !empty($comment) ? '' : '';
+	}
+	public function lastSql(){
+		return $this->lasSql;
 	}
 	public function __clone(){
 		trigger_error('Clone is not allowed.', E_USER_ERROR);

@@ -3,7 +3,7 @@
  * PALM  Simple And Easy
  *
  * An open source application development framework for PHP 5.1.6 or newer
- * @package         base
+ * @package         system.database
  * @copyright       Copyright (c) 2014  zihai  All rights reserved.
  * @author		    子海(zihaidetiandi@sina.com)
  * @copyright	    Copyright (c) 2014 - 2015, www.zihaidetiandi.com
@@ -12,7 +12,8 @@
  * @since		        Version 1.0
  * @filesource
  */
-class mysql{
-	
+class mysql extends db{
+
+
 }
 ?>

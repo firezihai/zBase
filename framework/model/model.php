@@ -20,7 +20,7 @@ class model{
 		$this->db = db::instance($connection);
 	}
 	public function select(){
-		$this->db->select();
+		$this->db->select($this->options);
 	}
 	public function where($where){
 		if (is_string($where) && $where != ''){

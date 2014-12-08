@@ -38,16 +38,16 @@ define('DS', DIRECTORY_SEPARATOR);
      public static function boot($config){
         include ZBASE_DIR.DS.'core'.DS.'app.php';
         self::systemPackage();
-        configure::write('app',$config);
 		kernel::single('app')->init($config);
         if(!self::registerAutoloader()){
             function __autoload($className){
                 app::autoload($className);
             }
         }
-        
+        configure::write('app',$config);
   		$m = new model();
-  		$m->where(array('and'=>array('id@<'=>'d','')));
+  		$m->where(array('id@<'=>3,'age@<'=>20,'or'=>array('id@<'=>1,'id@>'=>5)))->select();
+  	
   		
         
      }
