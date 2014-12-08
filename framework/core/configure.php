@@ -66,7 +66,23 @@ class configure{
     public function merge($data,$merge){
     	
     }
-   
- 
+    public static function load($file,$key= ''){
+    	if (strpos($key, '..') !== false){
+    		exit('Cannot load configuration files with ../ in them');
+    	}
+    	$file = str_replace('.', '/', $key);
+    	$file = APP_ROOT.DS.'config'.DS.$file.'.php';
+    	if (!empty($key)){
+    		$value[$key] = include $file;
+    	}else{
+    		$value = include $file;
+    	}
+    	return self::write($value);
+    }
+ 	public static function uses($file,$key){
+ 		if (self::load($file)){
+ 			return self::read($key);
+ 		}
+ 	}
 }
 ?>

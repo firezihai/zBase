@@ -13,6 +13,28 @@
  * @filesource
  */
 class model{
+	public $db = null;
+	public $options =array();
+	public function __construct($model='',$connection=''){
+		$connection = !empty($connection) ? $connection : configure::read('app.db');
+		$this->db = db::instance($connection);
+	}
+	public function select(){
+		$this->db->select();
+	}
+	public function where($where){
+		if (is_string($where) && $where != ''){
+			$temp = array();
+			$temp[] = $where;
+			$where = $temp;
+		}
+		if (isset($this->options['where'])){
+			$this->options['where'] = array_merge($this->options['where'],$where);
+		}else{
+			$this->options['where'] = $where;
+		}
+		return $this;
+	}
 	
 }
 ?>

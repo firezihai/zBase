@@ -38,18 +38,17 @@ define('DS', DIRECTORY_SEPARATOR);
      public static function boot($config){
         include ZBASE_DIR.DS.'core'.DS.'app.php';
         self::systemPackage();
+        configure::write('app',$config);
 		kernel::single('app')->init($config);
         if(!self::registerAutoloader()){
             function __autoload($className){
                 app::autoload($className);
             }
         }
-        echo 'script_name:'.request::scriptName().'<br/>';
-     	echo 'path_info:'.request::pathInfo().'<br/>';
-     	echo 'request_uri:'.request::requestUri().'<br/>';
-     	echo 'host:'.request::host().'<br/>';
-     	echo 'url:'.request::url().'<br/>';
-     	echo 'base_url：'.request::scriptFilName().'<br/>';
+        
+  		$m = new model();
+  		$m->where(array('and'=>array('id@<'=>'d','')));
+  		
         
      }
      /**
@@ -93,7 +92,9 @@ define('DS', DIRECTORY_SEPARATOR);
       * @return void
       */
      private static  function systemPackage(){
-     	$systemPackage = array('system.core');
+     	$systemPackage = array('system.core',
+     			               'system.model',     			
+     	                       'system.model.driver');
      	app::uses('system', ZBASE_DIR);
      	foreach ($systemPackage as $package){
      		app::uses($package);

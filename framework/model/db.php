@@ -102,7 +102,15 @@ class db{
 		if (is_string($where)){
 			$whereSql = $where;
 		}elseif (is_array($where)){
-			$operator = $where;
+			foreach ($where as $operator=>$value){
+				if (is_array($value)){
+					foreach ($value as $key=>$v){
+						if (strpos($key,'@') !== false){
+						$temp = explode('@', $key);
+						}
+					}
+				}
+			}
 		}
 	}
 	protected function parseGroup($group){
