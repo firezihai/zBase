@@ -137,19 +137,21 @@ class db{
 		}elseif (is_array($where)){
 			$operator = 'AND ';
 			foreach ($where as $key=>$v){
-				
 				if (!is_numeric($key)&& is_array($v) && in_array(strtoupper($key), array('AND','OR','XOR'))){
-					$operator = strtoupper($key);
+					$operator2 = strtoupper($key);
+					$whereSql2 = '';
 					$whereSql .='(';
 					foreach ($v as $field=>$value){
-						$whereSql .= $this->parseWhereItem($key, $v);
-						$whereSql .=')'.$operator;
+						$temp  = ' '.$this->parseWhereItem($field, $value);
+						if ($temp){
+							$whereSql2 .=  $temp.'  '.$operator2;
+						}
 					}
-					$whereSql .= substr($whereSql,0,-strlen($operator));
+					$whereSql .= substr($whereSql2,0,-strlen($operator2)).' ) AND';
 				}else{
 					
-					$whereSql .= $this->parseWhereItem($key, $v);
-					$whereSql .=' AND ';
+					$whereSql .=  ' '.$this->parseWhereItem($key, $v);
+					$whereSql .= ' AND';
 				}
 			}
 			$whereSql = substr($whereSql,0,-strlen($operator));

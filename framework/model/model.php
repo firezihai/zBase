@@ -15,9 +15,13 @@
 class model{
 	public $db = null;
 	public $options =array();
+	public $methods = array('table','count','having','order','alias','group')
 	public function __construct($model='',$connection=''){
 		$connection = !empty($connection) ? $connection : configure::read('app.db');
 		$this->db = db::instance($connection);
+	}
+	public function __call($method,$args){
+		
 	}
 	public function select(){
 		$this->db->select($this->options);
@@ -35,6 +39,6 @@ class model{
 		}
 		return $this;
 	}
-	
+
 }
 ?>
