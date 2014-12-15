@@ -156,13 +156,13 @@
  		return preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $ip,$matchs)? $matchs[0] : '';
  	
  	}
-	public function data(){
+	public static function data(){
 		$data = array();
 		$data['post'] = $_POST;
 		$data['get'] = $_GET;
 		$method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : '';
-		if (isset($data[$method])){
-			return $data[$method];
+		if (isset($data[strtolower($method)])){
+			return $data[strtolower($method)];
 		}
 	}
  }

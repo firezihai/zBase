@@ -57,7 +57,7 @@ class db{
 	public function select($options){
 		$sql = $this->bulidSql($this->sql,$options);
 		$this->lasSql = $sql;
-		echo $this->lasSql;
+	
 		//$result = $this->query($sql);
 		//return $result;
 	}
@@ -65,17 +65,17 @@ class db{
 	protected  function bulidSql($sql,$options){
 		$sql = str_replace(
 				array('%DISTINCT%','%FIELD%','%TABLE%','%JOIN%','%WHERE%','%GROUP%','%HAVING%','%ORDER%','%LIMIT%','%UNION%','%COMMENT%'),
-				array(	$this->parseDistinct($options['distinct']),
-							$this->parseField($options['field']),
-						   $this->parseTable($options['table']),
-						   $this->parseJoin($options['join']),
-						   $this->parseWhere($options['where']),
-						   $this->parseGroup($options['group']),
-						   $this->parseHaving($options['having']),
-						   $this->parseOrder($options['order']),
-						   $this->parseLimit($options['limit']),
-						   $this->parseUnion($options['unin']),
-						  $this->parseComment($options['comment'])
+				array(	$this->parseDistinct(isset($options['distinct'])?$options['distinct']:''),
+							$this->parseField(isset($options['field'])?$options['field']:''),
+						   $this->parseTable(isset($options['table'])?$options['table']:''),
+						   $this->parseJoin(isset($options['join'])?$options['join']:''),
+						   $this->parseWhere(isset($options['where'])?$options['where']:''),
+						   $this->parseGroup(isset($options['group'])?$options['group']:''),
+						   $this->parseHaving(isset($options['having'])?$options['having']:''),
+						   $this->parseOrder(isset($options['order'])?$options['order']:''),
+						   $this->parseLimit(isset($options['limit'])?$options['limit']:''),
+						   $this->parseUnion(isset($options['unin'])?$options['unin']:''),
+						  $this->parseComment(isset($options['comment'])?$options['comment']:'')
 				),
 				$sql);
 		return $sql;

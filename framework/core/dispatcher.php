@@ -26,6 +26,10 @@ class dispatcher{
 	public function dispatch(){
 		
 	}
+	
+	public function getController(){
+		
+	}
 }
 
 ?>

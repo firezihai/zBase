@@ -24,7 +24,8 @@ return array(
 				'user'=>'root',
 				'password'=>123456,
 				'dbname'=>'test2',
-				'charset'=>'utf8'
+				'charset'=>'utf8',
+				'tablePrefix'=>'tbl'
 		)
 )
 ?>

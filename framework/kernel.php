@@ -45,11 +45,9 @@ define('DS', DIRECTORY_SEPARATOR);
             }
         }
         configure::write('app',$config);
-  		$m = new model();
-  		$m->where(array('id@<'=>3,'age@<'=>20,'or'=>array('id@<'=>1,'id@>'=>5)))->select();
-  	
-  		
         
+		 echo request::pathInfo();
+
      }
      /**
       * 单例实法，用来实例化一个类，并返回这个类的对象。
