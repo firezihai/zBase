@@ -24,12 +24,21 @@ class dispatcher{
 	 * action为控制器类中的公共方法
 	 */
 	public function dispatch(){
-		
+		$controller = $this->getController();
+		if (!($controller instanceof controller)){
+			
+		}
 	}
 	
 	public function getController(){
-		
+		$ctl = isset($_GET['ctl'])? $_GET['ctl'] : (isset($_POST['ctl']) ? $_POST['ctl']: 'index');
+		$reflection = new ReflectionClass($ctl);
+		if ($reflection->isAbstract() || $reflection->isInterface()){
+			return false;
+		}
+		return $reflection->newInstance();
 	}
+
 }
 
 ?>

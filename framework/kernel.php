@@ -45,8 +45,8 @@ define('DS', DIRECTORY_SEPARATOR);
             }
         }
         configure::write('app',$config);
-        
-		 echo request::pathInfo();
+        $dispatcher = new dispatcher();
+        $dispatcher->dispatch();
 
      }
      /**
