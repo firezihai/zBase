@@ -13,6 +13,27 @@
  * @filesource
  */
 class controller{
+	public $methods;
+	public function __construct(){
+
+		$childMethods = get_class_methods($this);
+		$parentMethods = get_class_methods('Controller');
+		$this->methods = array_diff($childMethods, $parentMethods);
+	}
+	public function invokeAction(){
+		try {
+			$method = new ReflectionMethod($this,$request->params['action']);
+			if ($this->isPrivateAction($method)){
+				exit('私有方法');
+			}
+		}catch (ReflectionMethod $e){
+			exit("action不存在");
+		}
+	}
 	
+	public function isPrivateAction(ReflectionMethod $method){
+		$isPrivateAction = (!$method->isPublic() || !in_array($method->name, $this->methods));
+		return $isPrivateAction;
+	}
 }
 ?>

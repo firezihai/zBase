@@ -19,6 +19,18 @@
  * @filesource
  */
  class request{
+ 	public $params;
+ 	public $data;
+ 	public $query;
+ 	
+ 	public function __construct(){
+ 		if (get_magic_quotes_gpc()){
+ 			$_GET = string::newStripslashes($_GET);
+ 			$_POST = string::newStripslashes($_POST);
+ 		}
+ 		$this->processGet();
+ 		$this->processPost();
+ 	}
  	/**
  	 * 当前url中的路径信息
  	 * <code>
@@ -145,7 +157,7 @@
  	 * 获取客户端ip
  	 * @return string 如果ip格式不正确，而返回空
  	 */
- 	public static function ip(){
+ 	public static function clientIp(){
  		if (isset($_SERVER['HTTP_CLINET_IP'])) {
  			$ip= $_SERVER['HTTP_CLINET_IP'];
  		}elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
@@ -156,13 +168,28 @@
  		return preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $ip,$matchs)? $matchs[0] : '';
  	
  	}
-	public static function data(){
-		$data = array();
-		$data['post'] = $_POST;
-		$data['get'] = $_GET;
-		$method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : '';
-		if (isset($data[strtolower($method)])){
-			return $data[strtolower($method)];
+ 	protected static function processGet(){
+ 		$query = $_GET;
+ 		if (strpos($this->url(), '?') !== false){
+ 			list(,$queryStr) = explode('?', $this->url());
+ 			parse_str($queryStr,$queryArgs);
+ 			$query += $queryArgs;
+ 		}
+ 		$this->query = $query;
+ 	}
+	protected static function processPost(){
+		if ($_POST){
+			$this->data = $_POST;
+		}
+		$isArray = is_array($this->data);
+		if ($isArray && isset($this->data['data'])){
+			$data = $this->data["data"];
+			if (count($data)<=1){
+				$this->data = $data;
+			}else{
+				unset($this->data['data']);
+				$this->data = hash::merge($this->data, $data);
+			}
 		}
 	}
  }

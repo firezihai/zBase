@@ -26,12 +26,14 @@ class dispatcher{
 	public function dispatch(){
 		$controller = $this->getController();
 		if (!($controller instanceof controller)){
-			
+			exit("ddd");
 		}
+		$controller->invokeAction();
 	}
 	
 	public function getController(){
 		$ctl = isset($_GET['ctl'])? $_GET['ctl'] : (isset($_POST['ctl']) ? $_POST['ctl']: 'index');
+		$ctl = $ctl."Controller";
 		$reflection = new ReflectionClass($ctl);
 		if ($reflection->isAbstract() || $reflection->isInterface()){
 			return false;

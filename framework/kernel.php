@@ -44,6 +44,7 @@ define('DS', DIRECTORY_SEPARATOR);
                 app::autoload($className);
             }
         }
+        
         configure::write('app',$config);
         $dispatcher = new dispatcher();
         $dispatcher->dispatch();

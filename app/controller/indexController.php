@@ -12,13 +12,7 @@
  * @since		        Version 1.0
  * @filesource
  */
-class string{
-	public static  function newStripslashes($value){
-	/*	if(!is_array($value)) return stripslashes($value);
-		foreach($value as $key=>$v) $value[$key] = $this->new_valueipslashes($v);
-		return $value;*/
-		$value = is_array($value)? array_map(array('this','newStripslashes'), $value) : stripslashes($value);
-		return $value;
-	}
+class indexController extends  controller{
+	
 }
 ?>
