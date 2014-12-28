@@ -37,6 +37,7 @@ define('DS', DIRECTORY_SEPARATOR);
 	 */
      public static function boot($config){
         include ZBASE_DIR.DS.'core'.DS.'app.php';
+        include ZBASE_DIR.DS.'core'.DS.'exception.php';
         self::systemPackage();
 		kernel::single('app')->init($config);
         if(!self::registerAutoloader()){
@@ -47,7 +48,7 @@ define('DS', DIRECTORY_SEPARATOR);
         
         configure::write('app',$config);
         $dispatcher = new dispatcher();
-        $dispatcher->dispatch();
+        $dispatcher->dispatch(new request());
 
      }
      /**
@@ -98,6 +99,16 @@ define('DS', DIRECTORY_SEPARATOR);
      	foreach ($systemPackage as $package){
      		app::uses($package);
      	}
+     }
+      public static function t($msg,$params=array()){
+     	if (is_string($params)){
+     		$params = array($params);
+     	}
+     	if (isset($params[0])){
+     		$params['{'.$params[0].'}'] = $params[0];
+     		unset($params[0]);
+     	}
+     	return $params !== array() ? strtr($msg,$params) : $msg;
      }
  }
 ?>

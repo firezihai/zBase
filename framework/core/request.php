@@ -19,7 +19,12 @@
  * @filesource
  */
  class request{
- 	public $params;
+ 	public $params=array(
+ 			'module'=>null,
+ 			'controller'=>null,
+ 			'action'=>null,
+ 			'pass'=>null
+ 	);
  	public $data;
  	public $query;
  	
@@ -168,7 +173,7 @@
  		return preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $ip,$matchs)? $matchs[0] : '';
  	
  	}
- 	protected static function processGet(){
+ 	protected  function processGet(){
  		$query = $_GET;
  		if (strpos($this->url(), '?') !== false){
  			list(,$queryStr) = explode('?', $this->url());
@@ -177,7 +182,7 @@
  		}
  		$this->query = $query;
  	}
-	protected static function processPost(){
+	protected  function processPost(){
 		if ($_POST){
 			$this->data = $_POST;
 		}
@@ -191,6 +196,10 @@
 				$this->data = hash::merge($this->data, $data);
 			}
 		}
+	}
+	
+	public function addParam($param){
+		$this->params = array_merge($this->params,(array)$param);
 	}
  }
 ?>

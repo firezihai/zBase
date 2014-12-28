@@ -17,16 +17,17 @@ class controller{
 	public function __construct(){
 
 		$childMethods = get_class_methods($this);
-		$parentMethods = get_class_methods('Controller');
+		$parentMethods = get_class_methods('controller');
 		$this->methods = array_diff($childMethods, $parentMethods);
 	}
-	public function invokeAction(){
+	public function invokeAction($request){
 		try {
 			$method = new ReflectionMethod($this,$request->params['action']);
 			if ($this->isPrivateAction($method)){
 				exit('私有方法');
 			}
-		}catch (ReflectionMethod $e){
+			return $method->invokeArgs($this, $request->params['pass']);
+		}catch (ReflectionException $e){
 			exit("action不存在");
 		}
 	}

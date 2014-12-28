@@ -19,28 +19,51 @@
  * @filesource
  */
 class dispatcher{
+	private function beforeDispatch($request){
+		$this->parseParam($request);
+	}
 	/**
 	 * 根据用户请求调用控制器和方法
 	 * action为控制器类中的公共方法
 	 */
-	public function dispatch(){
-		$controller = $this->getController();
+	public function dispatch($request){
+		$this->beforeDispatch($request);
+		$controller = $this->getController($request);
 		if (!($controller instanceof controller)){
-			exit("ddd");
+			throw  new missingControllerException("ddd");
 		}
-		$controller->invokeAction();
+		$controller->invokeAction($request);
 	}
 	
-	public function getController(){
-		$ctl = isset($_GET['ctl'])? $_GET['ctl'] : (isset($_POST['ctl']) ? $_POST['ctl']: 'index');
-		$ctl = $ctl."Controller";
-		$reflection = new ReflectionClass($ctl);
-		if ($reflection->isAbstract() || $reflection->isInterface()){
-			return false;
-		}
-		return $reflection->newInstance();
+	public function getController($request){
+			$controller = $this->loadController($request);
+			if (!$controller){
+				return false;
+			}
+			$reflection = new ReflectionClass($controller);
+			if ($reflection->isAbstract() || $reflection->isInterface()){
+				return false;
+			}
+			return $reflection->newInstance();
 	}
-
+	public function loadController($request){
+		$controller = null;
+		if (!empty($request->params['controller'])){
+			$controller = $request->params['controller'];
+		}
+		if ($controller){
+			$controller = $controller."Controller";
+			if (class_exists($controller)){
+				return $controller;
+			}
+		}
+		return false;
+	}
+	public function parseParam($request){
+		$url = $request->url();
+		$param = router::parse($url);
+		$request->addParam($param);
+	}
 }
 
 ?>
