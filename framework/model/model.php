@@ -63,6 +63,11 @@ class model{
 		}
 		return $res;
 	}
+	/**
+	 * 
+	 * @param unknown $fields
+	 * @return model
+	 */
 	public function field($fields){
 		if (is_string($fields)){
 			$fields = explode(',', $fields);
