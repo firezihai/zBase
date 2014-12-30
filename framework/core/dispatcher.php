@@ -19,12 +19,26 @@
  * @filesource
  */
 class dispatcher{
-	private function beforeDispatch($request){
+	/**
+	 * 调用调度方法之前的回调方法 
+	 * @param request $request
+	 */
+	protected  function beforeDispatch($request){
 		$this->parseParam($request);
 	}
 	/**
-	 * 根据用户请求调用控制器和方法
-	 * action为控制器类中的公共方法
+	 * 调用调度方法之后的回调方法
+	 * @param request $request
+	 */
+	protected function afterDispatch($request){}
+	/**
+	 * 应用程序的调度方法。
+	 * 根据当前请求的url信息，调用相应的控制器和方法。
+	 * 其中的action为控制器的公共方法。如果控制器不是controller的子类，
+	 * 将抛出异常信息
+	 * @param request $request
+	 * @throws missingControllerException
+	 * return void
 	 */
 	public function dispatch($request){
 		$this->beforeDispatch($request);
@@ -33,8 +47,13 @@ class dispatcher{
 			throw  new missingControllerException("ddd");
 		}
 		$controller->invokeAction($request);
+		$this->afterDispatch($request);
 	}
-	
+	/**
+	 * 获取当前控制器对象实例
+	 * @param request $request
+	 * @return boolean|object
+	 */
 	public function getController($request){
 			$controller = $this->loadController($request);
 			if (!$controller){
@@ -46,6 +65,11 @@ class dispatcher{
 			}
 			return $reflection->newInstance();
 	}
+	/**
+	 * 加载控制器
+	 * @param request $request
+	 * @return string|boolean
+	 */
 	public function loadController($request){
 		$controller = null;
 		if (!empty($request->params['controller'])){
@@ -59,6 +83,10 @@ class dispatcher{
 		}
 		return false;
 	}
+	/**
+	 * 解析当前请求的url，并转换成一个参数数组
+	 * @param request  $request
+	 */
 	public function parseParam($request){
 		$url = $request->url();
 		$param = router::parse($url);

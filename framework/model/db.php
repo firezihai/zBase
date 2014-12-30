@@ -27,7 +27,7 @@ class db{
 	private function __construct(){}
 	/**
 	 * 单例方法
-	 * 配置信息为不同，返回不同的数据库驱动对象例实例
+	 * 配置信息不同，返回不同的数据库驱动对象例实例
 	 * @param array $config
 	 */
 	public static function instance($config){
@@ -61,7 +61,12 @@ class db{
 		//$result = $this->query($sql);
 		//return $result;
 	}
-	
+	/**
+	 * 构造$sql语句
+	 * @param string $sql sql语句模板
+	 * @param array $options 要
+	 * @return mixed
+	 */
 	protected  function bulidSql($sql,$options){
 		$sql = str_replace(
 				array('%DISTINCT%','%FIELD%','%TABLE%','%JOIN%','%WHERE%','%GROUP%','%HAVING%','%ORDER%','%LIMIT%','%UNION%','%COMMENT%'),
@@ -80,6 +85,11 @@ class db{
 				$sql);
 		return $sql;
 	}
+	/**
+	 * 解析sql语句的字段信息
+	 * @param array|string $fields 字段信息
+	 * @return string 返回要查询字段
+	 */
 	protected function parseField($fields){
 		if(is_string($fields)&& strpos($fields, ',')){
 			$fields = explode(',', $fields);
@@ -101,6 +111,11 @@ class db{
 		}
 		return $fieldStr ;
 	}
+	/**
+	 * 解析正确的表信息
+	 * @param array|string $tables 代解析的表信息
+	 * @return string  返回表名
+	 */
 	protected function parseTable($tables){
 		if (is_array($tables)){
 			$array = array();
@@ -117,9 +132,19 @@ class db{
 		}
 		return implode(',', $tables);
 	}
+	/**
+	 * 二次解析字段
+	 * @param string $key 字段名
+	 * @return string 返回字段
+	 */
 	protected function parseKey(&$key){
 		return $key;
 	}
+	/**
+	 * 解板字段的值
+	 * @param unknown $value
+	 * @return string
+	 */
 	protected function parseValue($value){
 		if (is_string($value)){
 			$value = '\''.$value.'\'';
@@ -130,6 +155,21 @@ class db{
 		}
 		return $value;
 	}
+	/**
+	 * 解析where条件
+	 * <code>
+	 * this->where(array('AND'=>array('id@<'=>6,'sex@=1'=>1)));
+	 * this->where(array('id@<'=>6,'sex@=1'=>1));
+	 * //将被转化成
+	 * //id<6 AND sex=1
+	 * this->where(array('AND'=>array('id@<'=>6,'sex@=1'=>1),
+	 * 					'OR'=>array('age@>'=>20,'age@<'=>18)
+	 * 			  ));
+	 * //(id<6 AND sex=1) AND  (age>20 or age<18 );
+	 * </code>
+	 * @param array|string $where where条件
+	 * @return string 返回sql语句中的where部份
+	 */
 	protected function parseWhere($where){
 		$whereSql = '';
 		if (is_string($where)){
@@ -159,6 +199,12 @@ class db{
 
 		return !empty($whereSql) ? ' WHERE '.$whereSql : '';
 	}
+	/**
+	 * 解析where条件单元
+	 * @param string $key 包含字段名和逻辑符的字符串
+	 * @param unknown $v 字段的值
+	 * @return string
+	 */
 	protected function parseWhereItem($key,$v){
 		$whereSql = '';
 		if (strpos($key,'@') !== false){
@@ -176,6 +222,11 @@ class db{
 		}
 		return $whereSql;
 	}
+	/**
+	 * 
+	 * @param string $join
+	 * @return string 返回join语句
+	 */
 	protected function parseJoin($join){
 		$joinStr = '';
 		if (!empty($join)){
@@ -183,27 +234,56 @@ class db{
 		}
 		return $joinStr;
 	}
+	/**
+	 * 
+	 * @param string $distinct
+	 * @return string 返回distinct语句
+	 */
 	protected function parseDistinct($distinct){
 		return !empty($distinct) ? 'DISTINCT '.$distinct : '';
 	}
+	/**
+	 * 
+	 * @param string $group
+	 * @return string 返回group语句
+	 */
 	protected function parseGroup($group){
 		return !empty($group) ? 'GROUP BY '.$group : '';
 	}
 	protected function parseHaving($having){
 		return !empty($having)?'HAVING '.$having : '';
 	}
+	/**
+	 * 
+	 * @param unknown $order
+	 * @return string 返回order语句
+	 */
 	protected  function parseOrder($order){
 		return !empty($order) ? 'ORDER BY  '.$order : '';
 	}
+	/**
+	 * 
+	 * @param string $limit
+	 * @return string 返回limit语句
+	 */
 	protected  function parseLimit($limit){
 		return !empty($limit) ? 'LIMIT '.$limit : '';
 	}
+	/**
+	 * 
+	 * @param string $union
+	 * @return string 返回union语句
+	 */
 	protected function parseUnion($union){
 		return !empty($union) ? 'UNION '.$union : '';
 	}
 	protected function parseComment($comment){
 		return !empty($comment) ? '' : '';
 	}
+	/**
+	 * 获取最后一次查询的sql语句
+	 * @return mixed
+	 */
 	public function lastSql(){
 		return $this->lasSql;
 	}

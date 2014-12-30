@@ -100,7 +100,17 @@ define('DS', DIRECTORY_SEPARATOR);
      		app::uses($package);
      	}
      }
-      public static function t($msg,$params=array()){
+     /**
+      * 格式化字符串
+      * <code>
+      * kernel::t("controller class {controller} not found ",array("{controller}"=>$controller));
+      * kernel::t("controller class {controller} not found ",$controller);
+      * </code>
+      * @param string $msg
+      * @param array|string $params
+      * @return string
+      */
+     public static function t($msg,$params=array()){
      	if (is_string($params)){
      		$params = array($params);
      	}

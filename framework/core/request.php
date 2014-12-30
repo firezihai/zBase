@@ -19,13 +19,25 @@
  * @filesource
  */
  class request{
+ 	/**
+ 	 * url解析后的参数数组
+ 	 * @var array
+ 	 */
  	public $params=array(
  			'module'=>null,
  			'controller'=>null,
  			'action'=>null,
  			'pass'=>null
  	);
+ 	/**
+ 	 * $_POST数据
+ 	 * @var array
+ 	 */
  	public $data;
+ 	/**
+ 	 * 查询参数$_GET数据
+ 	 * @var array
+ 	 */
  	public $query;
  	
  	public function __construct(){
@@ -173,6 +185,10 @@
  		return preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $ip,$matchs)? $matchs[0] : '';
  	
  	}
+ 	/**
+ 	 * 储存$_GET变量的值
+ 	 * return void
+ 	 */
  	protected  function processGet(){
  		$query = $_GET;
  		if (strpos($this->url(), '?') !== false){
@@ -182,6 +198,10 @@
  		}
  		$this->query = $query;
  	}
+ 	/**
+ 	 * 储存$_POST变量的值
+ 	 * return void
+ 	 */
 	protected  function processPost(){
 		if ($_POST){
 			$this->data = $_POST;
@@ -197,7 +217,10 @@
 			}
 		}
 	}
-	
+	/**
+	 * 添加请求参数
+	 * @param array $param
+	 */
 	public function addParam($param){
 		$this->params = array_merge($this->params,(array)$param);
 	}

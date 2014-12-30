@@ -13,9 +13,14 @@
  * @filesource
  */
 class string{
+	/**
+	 * 字符转义方法
+	 * @param array|string $value 待转义的数组或字符串
+	 * @return array|string 返回经过stripslashes转义后的$value
+	 */
 	public static  function newStripslashes($value){
 	/*	if(!is_array($value)) return stripslashes($value);
-		foreach($value as $key=>$v) $value[$key] = $this->new_valueipslashes($v);
+		foreach($value as $key=>$v) $value[$key] = $this->newStripslashes($v);
 		return $value;*/
 		$value = is_array($value)? array_map(array('this','newStripslashes'), $value) : stripslashes($value);
 		return $value;
