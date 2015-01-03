@@ -45,8 +45,7 @@ define('DS', DIRECTORY_SEPARATOR);
                 app::autoload($className);
             }
         }
-        
-        configure::write('app',$config);
+        configure::write('main',$config);
         $dispatcher = new dispatcher();
         $dispatcher->dispatch(new request());
 
@@ -118,7 +117,7 @@ define('DS', DIRECTORY_SEPARATOR);
      		$params['{'.$params[0].'}'] = $params[0];
      		unset($params[0]);
      	}
-     	return $params !== array() ? strtr($msg,$params) : $msg;
+     	return $params !== array() ? vsprintf($msg,$params) : $msg;
      }
  }
 ?>

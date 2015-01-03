@@ -44,7 +44,7 @@ class dispatcher{
 		$this->beforeDispatch($request);
 		$controller = $this->getController($request);
 		if (!($controller instanceof controller)){
-			throw  new missingControllerException("ddd");
+			throw  new baseException(kernel::t("Controller class '%s' could not be found.",$request->params['controller']));
 		}
 		$controller->invokeAction($request);
 		$this->afterDispatch($request);
@@ -72,6 +72,7 @@ class dispatcher{
 	 */
 	public function loadController($request){
 		$controller = null;
+
 		if (!empty($request->params['controller'])){
 			$controller = $request->params['controller'];
 		}
@@ -88,10 +89,11 @@ class dispatcher{
 	 * @param request  $request
 	 */
 	public function parseParam($request){
-		$url = $request->url();
+		$url = $request::requestUri();
 		$param = router::parse($url);
 		$request->addParam($param);
 	}
+
 }
 
 ?>

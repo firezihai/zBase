@@ -13,20 +13,17 @@
  * @filesource
  */
 return array(
-		'appPath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-		'import'=>array(
-				'app.controller',
-				'app.model',
-		),
-		'db'=>array(
-				'db_type'=>'mysql',
-				'host'=>'localhost',
-				'user'=>'root',
-				'password'=>123456,
-				'dbname'=>'test2',
-				'charset'=>'utf8',
-				'tablePrefix'=>'tbl'
-		),
-		'module'=>true
+	'defaultApp'=>'app',
+	'app'=>array(
+			'defaultController'=>'index',
+			'defaultAction'=>'index',
+			'alias'=>'home',
+			'disable'=>true,
+			'indexController'=>array(
+						 'disable'=>true,
+						 'index'=>true,
+						 'display'=>false
+			)
+	)
 )
 ?>

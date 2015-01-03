@@ -27,7 +27,7 @@
  			'module'=>null,
  			'controller'=>null,
  			'action'=>null,
- 			'pass'=>null
+ 			'pass'=>array()
  	);
  	/**
  	 * $_POST数据

@@ -28,14 +28,14 @@ class configure{
      *
      *注意：如果要插入的变量在app::$conf已经存在，将会覆盖原来的值。
 	 * <code>
-	 *  app::write('app.key1','向app::$conf中键名为app的值里，插入一条数键名为key1的数据')
-	 *  app::write(array('app.key1'=>'向app::$conf中键名为app的值里，插入一条数键名为key1的数据'))
-	 *  app:write('app',array('key1'=>'向app::$conf中键名为app的值里，插入一条数键名为key1的数据',
-	 *                              'key2'=>'向app::$conf中键名为app的值里，插入一条数键名为key1的数据'
-	 *  ))
-	 *  app:write(array('app.key1'=>'向app::$conf中键名为app的值里，插入一条数键名为key1的数据',
-	 *                              'app.key2'=>'向app::$conf中键名为app的值里，插入一条数键名为key1的数据'
-	 *  ))
+	 *  app::write('app.key1','value')
+	 *  app::write(array('app.key1'=>'value'))
+	 *  app:write('app',array('key1'=>'value',
+	 *                       'key2'=>'value')
+	 *  )
+	 *  app:write(array('app.key1'=>'value',
+	 *                  'app.key2'=>'value')
+	 *  )
 	 * </code>
      * @param string | array  $config 要插入的变量，变量可以使用点符号表示层级
      * @param mixed $value 变量的值
@@ -66,18 +66,25 @@ class configure{
     public function merge($data,$merge){
     	
     }
-    public static function load($file,$key= ''){
+    public static function load($file,$key= '',$isMain=true){
     	if (strpos($key, '..') !== false){
     		exit('Cannot load configuration files with ../ in them');
     	}
-    	$file = str_replace('.', '/', $key);
+    	if(strpos($key,'.')){
+    		$key = str_replace('.', '/', $key);
+    		$file = $key.DS.$file;
+    	}
     	$file = APP_ROOT.DS.'config'.DS.$file.'.php';
     	if (!empty($key)){
     		$value[$key] = include $file;
     	}else{
     		$value = include $file;
     	}
-    	return self::write($value);
+    	if($isMain){
+    		return self::write($value);
+    	}else{
+    		return $value;
+    	}
     }
  	public static function uses($file,$key){
  		if (self::load($file)){

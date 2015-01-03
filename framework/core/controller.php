@@ -20,7 +20,11 @@ class controller{
 		$parentMethods = get_class_methods('controller');
 		$this->methods = array_diff($childMethods, $parentMethods);
 	}
+	public function beforeController($request){}
+	
+	public function afterController($request){}
 	public function invokeAction($request){
+		$this->beforeController($request);
 		try {
 			$method = new ReflectionMethod($this,$request->params['action']);
 			if ($this->isPrivateAction($method)){
@@ -28,10 +32,9 @@ class controller{
 			}
 			return $method->invokeArgs($this, $request->params['pass']);
 		}catch (ReflectionException $e){
-			exit("action不存在");
+			exit($request->params['controller'].' not action '.$request->params['action']);
 		}
 	}
-	
 	public function isPrivateAction(ReflectionMethod $method){
 		$isPrivateAction = (!$method->isPublic() || !in_array($method->name, $this->methods));
 		return $isPrivateAction;

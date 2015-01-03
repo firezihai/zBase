@@ -13,7 +13,7 @@
  * @filesource
  */
 defined('ROOT') or define('ROOT', realpath(dirname(dirname(__FILE__))));
-defined('APP_ROOT') or define('APP', realpath(dirname(dirname(__FILE__))).'/app');
+defined('APP_ROOT') or	define('APP_ROOT', realpath(dirname(dirname(__FILE__))).'/app');
 defined('APP') or define('APP', 'app');
 $config = require ROOT.'/app/config/main.php';
 require ROOT.'/framework/kernel.php';

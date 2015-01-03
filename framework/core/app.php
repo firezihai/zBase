@@ -168,7 +168,8 @@ class app{
      
      /**
       * 配置应用
-      * 如果app类中不存在与$config数组的键名相同的属性，就会通过魔术方法__set()，查找app类中是否存在$config数组的键名加set前缀的方法，
+      * 
+      * 如果app类中不存在与$config数组的键名相同的属性，就会通过__set()魔术方法，查找app类中是否存在$config数组的键名加set前缀的方法，
       * 存在便调用。
       * @param array $config
       */

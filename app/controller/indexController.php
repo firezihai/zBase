@@ -13,6 +13,12 @@
  * @filesource
  */
 class indexController extends  controller{
+	function index(){
+		echo 'index';
+	}
 	
+	public function display(){
+		echo 'display';
+	}
 }
 ?>

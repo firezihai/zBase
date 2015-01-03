@@ -13,17 +13,8 @@
  * @filesource
  */
 class baseException extends RuntimeException{
-	protected  $messageTemplate ='';
-	public $attribute = '';
 	public function __construct($message,$code=500){
-		$message = kernel::t($this->messageTemplate,$message);
 		parent::__construct($message, $code);
-	}
-}
-class missingControllerException extends  baseException{
-	public $messageTemplate = 'Controller class {controller} could not be found.';
-	public function __construct($message,$code=404){
-		parent::__construct($message,$code);
 	}
 }
 ?>

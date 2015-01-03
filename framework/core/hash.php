@@ -10,6 +10,7 @@
  */
 /**
  *处理和获取数组中数据的方法集合
+ *
  *hash类使用'.'标记构造的键操作链设置和提取数组的值，这种方法更加方便和直观了解当前操作的数组结构。
  * @author       子海(zihaidetiandi@sina.com)
  * @package      system.core
@@ -18,17 +19,19 @@
  * @filesource
  */
 class hash{
-    /**
-     * 根据$path提供的键操作链，从 $data数组中获取相应的值
-     * 通过点标记构造的键操作链，能够快速的获取数组的值
-     * <code>
-     * hash::get(array('app'=>array('core'=>array('app.php','configure.php'))),'app.core'); //return array('app.php','configure.php')
-     * </code>
-     * 
-     * @param array $data
-     * @param string $path
-     * @return mixed 如果数组中存在此键操作链，返回键操作链对应的值，否则返回null
-     */
+
+   /**
+    * 根据$path提供的键操作链，从 $data数组中获取相应的值
+    * 
+    * 通过点标记构造的键操作链，能够快速的获取数组的值
+    * <code>
+    * hash::get(array('app'=>array('core'=>array('app.php','configure.php'))),'app.core'); //return array('app.php','configure.php')
+    * </code>
+    * 
+    * @param array $data
+    * @param string $path
+    * @return mixed 如果数组中存在此键操作链，返回键操作链对应的值，否则返回null
+    */
    public static function get(array $data,$path){
        if(empty($data)){
            return null;
@@ -49,6 +52,7 @@ class hash{
    }
    /**
     * 按照$path向$data数组中插入$value
+    * 
     * 你可以向$data数组中插入一个字符串，也可以向数组中插入一个数组
     * <code>
     * $data = array('app'=>array('core'=>array('app.php','configure.php')));
@@ -83,6 +87,7 @@ class hash{
    }
    /**
     * 合并数组
+    * 
     * array_merge和array_merge_recursive方法结合。
     * 如果$data和$merge存在相同的键名， $merge中的值不会覆盖$data的值，而是附加到$data数组的后面。
     * @param array $data

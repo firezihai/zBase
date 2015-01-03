@@ -13,5 +13,7 @@
  * @filesource
  */
 define("ROOT",realpath(dirname(__FILE__)));
+define('APP_ROOT', realpath(dirname(dirname(__FILE__))).'/app');
+define('APP', 'app');
 require_once ROOT.'/app/index.php';
 ?>
