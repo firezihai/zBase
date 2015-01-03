@@ -14,11 +14,11 @@
  */
 class indexController extends  controller{
 	function index(){
-		echo 'index';
+		echo '我是index';
 	}
 	
 	public function display(){
-		echo 'display';
+		echo '我是display';
 	}
 }
 ?>

@@ -50,7 +50,6 @@ class app{
     	}
     	self::setPackagePath('app', $this->getAppPath());
     	$this->configure($config);
-
     }
     public function __get($name){
     	$method = 'get'.$name;
@@ -110,6 +109,7 @@ class app{
     			foreach (self::$_includePath as $path){
     				$classFile = $path.DS.$className.'.php';
     				if (is_file($classFile)){
+
     					self::$_classMap[$className] = $classFile;
     					include $classFile;
     					if (basename(realpath($classFile)) !== $className.'.php'){

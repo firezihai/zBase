@@ -16,6 +16,8 @@ class router{
 	public static $defaultApp;
 	public static $defaultController;
 	public static $defaultAction;
+	public static $appDefaultCtl = '';
+	public static $appDefaultAct = '';
 	public static $_initialized = false;
 	public static $_router=array();
 	public static function loadRouter(){
@@ -46,10 +48,19 @@ class router{
 			list($url, $queryParameters) = explode('?', $url, 2);
 			parse_str($queryParameters, $var);
 		}elseif (strpos($url, '/') !== false){
-			if($url{0} == '/') $url = substr($url, 1);
+			if($url{0} == '/') $url = substr($url,1);
 			$path = explode('/', $url);
-			$pathInfo = explode('/',request::pathInfo());
-			$path = array_merge($path,(array)$pathInfo);
+			if ($pathInfo = request::pathInfo()){
+				$pathInfo = explode('/',$pathInfo);
+				$path = array_merge($path,$pathInfo);
+			}
+			$var['action'] = array_pop($path);
+			if (!empty($path) &&!empty($path)){
+				$var['controller'] = array_pop($path);
+			}
+			if (!empty($path) && configure::read('main.multipleApp')){
+				$var['app'] = array_pop($path);
+			}
 		}
 		if (isset($var['a'])){
 			$var['action'] = $var['a'];
@@ -59,18 +70,17 @@ class router{
 			$var['controller'] = $var['c'];
 			unset($var['c']);
 		}
-		if (isset($path)){
-			$var['action'] = array_pop($path);
-			if (!empty($path) &&!empty($path)){
-				$var['controller'] = array_pop($path);
-			}
-			if (!empty($path)){
-				$var['app'] = array_pop($path);
-			}
-		}
-		print_r($var);
 		if (!isset($var['app']) || empty($var['app'])){
 			$var['app'] = self::$defaultApp;
+		}
+		$var['app'] = self::getAppReal($var['app']);
+		$appDefaultCtl = hash::get(self::$_router, $var['app'].'.defaultController');
+		$appDefaultAct = hash::get(self::$_router, $var['app'].'.defaultAction');
+		if ($appDefaultCtl){
+			self::$defaultController = $appDefaultCtl;
+		}
+		if ($appDefaultAct){
+			self::$defaultAction = $appDefaultAct;
 		}
 		if (!isset($var['controller']) || empty($var['controller'])){
 			$var['controller'] = self::$defaultController ;
@@ -78,12 +88,18 @@ class router{
 		if (!isset($var['action']) || empty($var['action'])){
 			$var['action'] = self::$defaultAction ;
 		}
-
 		self::filterRouter($var);
 		return $var;
 	}
 	public static function getRouter($path){
 		return hash::get(self::$_router, $path);
+	}
+	public static function getAppReal($app){
+		$real = hash::get(self::$_router, 'alias.'.$app);
+		if ($real){
+			$app = $real;
+		}
+		return $app;
 	}
 	/**
 	 * 
@@ -93,16 +109,17 @@ class router{
 	 */
 	public static function filterRouter(&$param){
 		$actionStatus = hash::get(self::$_router, $param['app'].'.'.$param['controller'].'Controller.'.$param['action']);
-		echo $param['app'].'.'.$param['controller'].'Controller.'.$param['action'];
 		if ( $actionStatus === false){
 			if ($param['action'] == self::$defaultAction && $param['controller'] == self::$defaultController && $param['app'] == self::$defaultApp){
 				throw new baseException('Methods the default controller default application has been disabled, please open the routing configuration file');
 			}elseif ($param['action'] == self::$defaultAction && $param['controller'] == self::$defaultController){
 				$param['app'] = self::$defaultApp;
 			}elseif($param['action'] == self::$defaultAction){
-				$param['app'] = self::$defaultController;
+				$param['controller'] = self::$defaultController;
+			}else{
+				$param['action'] = self::$defaultAction;
 			}
-		}elseif (hash::get(self::$_router, $param['app'].'.'.$param['controller'].'Controller.disable') && $actionStatus === false){
+		}elseif (hash::get(self::$_router, $param['app'].'.'.$param['controller'].'Controller.disable') && $actionStatus !== false){
 			if ($param['controller'] == self::$defaultController && $param['app'] == self::$defaultApp){
 				throw new baseException('The Controller of the default application has been disabled, please open the routing configuration file');
 			}elseif ($param['controller'] == self::$defaultController){
@@ -111,7 +128,6 @@ class router{
 		}elseif (hash::get(self::$_router, $param['app'].'.disable')){
 			throw new baseException('The default application has been disabled, please open the routing configuration file');
 		}
-		return $param;
 	}
 	
 }

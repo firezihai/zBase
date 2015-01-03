@@ -14,11 +14,17 @@
  */
 return array(
 	'defaultApp'=>'app',
-	'app'=>array(
+	'defaultController'=>'index',
+	'defaultAction'=>'index',
+	/*应用别名设置
+	 * 键为别名，值为真实路由，真实路由对应一个目录名
+	 * 如果启用的模块，在单独设置某个模块的路由时，必需以直实路由为键名。
+	 * */
+	'alias'=>array('desktop'=>'admin','test'=>'app'),
+	'admin'=>array(
 			'defaultController'=>'index',
-			'defaultAction'=>'index',
-			'alias'=>'home',
-			'disable'=>true,
+			'defaultAction'=>'init',
+			'disable'=>false,
 			'indexController'=>array(
 						 'disable'=>true,
 						 'index'=>true,
