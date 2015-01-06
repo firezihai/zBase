@@ -17,8 +17,6 @@ return array(
 		'import'=>array(
 				'app.controller',
 				'app.model',
-				'app.admin.controller',
-				'app.admin.model',
 		),
 		'db'=>array(
 				'db_type'=>'mysql',
@@ -29,6 +27,6 @@ return array(
 				'charset'=>'utf8',
 				'tablePrefix'=>'tbl'
 		),
-		'multipleApp'=>true,
+		'multipleApp'=>true
 )
 ?>

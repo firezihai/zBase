@@ -22,11 +22,11 @@ return array(
 	 * */
 	'alias'=>array('desktop'=>'admin','test'=>'app'),
 	'admin'=>array(
-			'defaultController'=>'index',
+			'defaultController'=>'pages',
 			'defaultAction'=>'init',
 			'disable'=>false,
 			'indexController'=>array(
-						 'disable'=>true,
+						 
 						 'index'=>true,
 						 'display'=>false
 			)

@@ -23,9 +23,7 @@ class dispatcher{
 	 * 调用调度方法之前的回调方法 
 	 * @param request $request
 	 */
-	protected  function beforeDispatch($request){
-		$this->parseParam($request);
-	}
+	protected  function beforeDispatch($request){}
 	/**
 	 * 调用调度方法之后的回调方法
 	 * @param request $request
@@ -42,6 +40,7 @@ class dispatcher{
 	 */
 	public function dispatch($request){
 		$this->beforeDispatch($request);
+		$this->parseParam($request);
 		$controller = $this->getController($request);
 		if (!($controller instanceof controller)){
 			throw  new baseException(kernel::t("Controller class '%s' could not be found.",$request->params['controller']));
@@ -92,6 +91,7 @@ class dispatcher{
 		$url = $request::requestUri();
 		$param = router::parse($url);
 		$request->addParam($param);
+		app::appInit($request);
 	}
 
 }

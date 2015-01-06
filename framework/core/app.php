@@ -63,6 +63,21 @@ class app{
     		return $this->$method($value);
     	}
     }
+    public static function appInit(request $request){
+    	$app = $request->params['app'];
+    	if (configure::read('base.multipleApp') && $app != '' && $app != 'app'){
+    		$appConfig = configure::load($app.'.'.$app,'',false);
+    		$appPath = ROOT.DS.APP.DS.$app;
+    		self::setPackagePath($request->params['app'], $appPath);
+    		if (is_array($appConfig['import'])){
+    			foreach ($appConfig['import'] as $key =>$v){
+    				self::import($v);
+    			}
+    		}
+    		configure::write($app,$appConfig);
+    	}
+
+    }
     /**
      * 导入包
      * @param unknown $package
