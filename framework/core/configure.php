@@ -74,7 +74,6 @@ class configure{
     		$file= str_replace('.', '/', $file);
     	}
     	$file = APP_ROOT.DS.'config'.DS.$file.'.php';
-    	echo $file;
     	if (!empty($key)){
     		$value[$key] = include $file;
     	}else{

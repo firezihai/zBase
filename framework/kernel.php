@@ -45,6 +45,8 @@ define('DS', DIRECTORY_SEPARATOR);
                 app::autoload($className);
             }
         }
+        register_shutdown_function(array('kernel', 'shutdown'));
+        set_error_handler(array('kernel','errorHandler'));
         configure::write('base',$config);
         $dispatcher = new dispatcher();
         $dispatcher->dispatch(new request());
@@ -118,6 +120,18 @@ define('DS', DIRECTORY_SEPARATOR);
      		unset($params[0]);
      	}
      	return $params !== array() ? vsprintf($msg,$params) : $msg;
+     }
+     
+     public static function shutdown(){
+     	$lastError = error_get_last();
+     	if(!is_array($lastError)){
+     		return;
+     	}
+     	list(,$log) = errorHandler::errorType($lastError['type']);
+     	if ($log !== LOG_ERR){
+     		return;
+     	}
+     	call_user_func('errorHandler::handlerError',$lastError['type'],$lastError[''])
      }
  }
 ?>
